@@ -58,7 +58,7 @@ class User extends Authenticatable
     // hasRoles relationship (many-to-many)
     public function roles()
     {
-        return $this->belongsToMany(Role::class, 'user_roles', 'user_id', 'role_id');
+        return $this->belongsToMany(Role::class, 'role_user', 'user_id', 'role_id');
     }
 
     public function files()
