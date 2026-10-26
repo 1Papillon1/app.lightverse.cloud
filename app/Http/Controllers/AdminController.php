@@ -8,23 +8,32 @@ use App\Models\User;
 
 class AdminController extends Controller
 {
-    
-    public function users() 
+    // Svi korisnici s ulogom user i njihov preostali prostor
+    public function users()
     {
-        $users = User::with('roles')->get();
-        $totalFileSize = File::sum('size');
-      
-        
+        $users = User::whereHas('roles', fn ($q) => $q->where('name', 'user'))
+            ->withSum('files', 'size') // daje stupac files_sum_size (u KB), null ako nema datoteka
+            ->orderBy('username')
+            ->paginate(5);
+
+        // Ako je zadnja stranica ostala prazna, vrati na zadnju postojeću
+        if ($users->isEmpty() && $users->currentPage() > 1) {
+            return redirect()->route('admin.users', ['page' => $users->lastPage()]);
+        }
 
         return view('admin.users', compact('users'));
     }
 
-    public function files() 
+    // Sve datoteke svih korisnika (uz podatak tko ih je uploadao)
+    public function files()
     {
-        $files = File::all();
+        $files = File::with('user')->latest()->paginate(5);
+
+        // Npr. nakon brisanja jedine datoteke na zadnjoj stranici
+        if ($files->isEmpty() && $files->currentPage() > 1) {
+            return redirect()->route('admin.files', ['page' => $files->lastPage()]);
+        }
 
         return view('admin.files', compact('files'));
     }
-
-    
 }
