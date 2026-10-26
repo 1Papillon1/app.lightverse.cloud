@@ -10,7 +10,7 @@ use App\Models\Role;
 
 class User extends Authenticatable
 {
-    /** @use HasFactory<\Database\Factories\UserFactory> */
+    
     use HasFactory, Notifiable;
 
     protected $table = 'users';
@@ -61,6 +61,11 @@ class User extends Authenticatable
         return $this->belongsToMany(Role::class, 'role_user', 'user_id', 'role_id');
     }
 
+    public function hasRole(string ...$roles): bool
+    {
+        return $this->roles->whereIn('name', $roles)->isNotEmpty();
+    }
+
     public function files()
     {
         return $this->hasMany(File::class);
@@ -71,9 +76,8 @@ class User extends Authenticatable
         return $this->files()->sum('size');
     }
 
-    public function getStorageSpaceRemainingAttribute()
+   public function getStorageSpaceRemainingAttribute(): int
     {
-        return $this->storage_limit - $this->files_storage_used;
+        return max(0, $this->storage_limit - $this->getStorageUsed());
     }
-    
 }
