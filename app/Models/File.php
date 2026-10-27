@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Notifications\Notifiable;
+use App\Models\User;
 
 class File extends Model
 {
@@ -20,6 +21,10 @@ class File extends Model
         'extension',
         'size',
     ];
+
+    public function user() {
+        return $this->belongsTo(User::class);
+    }
 
      // Prilagodba ikone prema ekstenziji
     public function getIconAttribute(): string
@@ -45,6 +50,8 @@ class File extends Model
             ? number_format($this->size / 1024, 2) . ' MB'
             : $this->size . ' KB';
     }
+
+    
 }
 
 
