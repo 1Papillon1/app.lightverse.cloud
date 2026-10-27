@@ -30,7 +30,7 @@
             @forelse($files as $file)
                 <tr>
                     <td><i class="bi {{ $file->icon }} fs-5 me-2"></i></td>
-                    <td>{{ $file->original_name }}</td>
+                    <td>{{ $file->name }}</td>
                     <td>{{ $file->user->first_name }} {{ $file->user->last_name }}</td>
                     <td>{{ $file->created_at->format('d.m.Y. H:i') }}</td>
                     <td>{{ $file->formatted_size }}</td>

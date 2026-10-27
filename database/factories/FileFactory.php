@@ -30,7 +30,7 @@ class FileFactory extends Factory
         return [
             'user_id'       => User::factory(),
             'extension'     => $extension,
-            'original_name' => fake()->slug(2) . '.' . $extension,
+            'name' => fake()->slug(2) . '.' . $extension,
             'storage_path'  => fn (array $attributes) => 'users/' . $attributes['user_id'] . '/'
                                 . Str::random(40) . '.' . $attributes['extension'],
             'size'          => fake()->numberBetween(10, 500), // KB
