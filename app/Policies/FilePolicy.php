@@ -9,8 +9,7 @@ class FilePolicy
     /**
      * Create a new policy instance.
      */
-    public function __construct()
-    {
+   
         // Pravilo za preuzimanje datoteke
         public function download(User $user, File $file): bool
         {
@@ -28,5 +27,5 @@ class FilePolicy
         {
             return $user->id === $file->user_id || $user->hasRole('super_admin');
         }
-    }
+    
 }
