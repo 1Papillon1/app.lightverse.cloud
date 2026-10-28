@@ -2,16 +2,19 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Models\File;
+use App\Models\Role;
 use App\Models\User;
 
 class AdminController extends Controller
 {
-    // Svi korisnici s ulogom user i njihov preostali prostor
+    // Svi korisnici s ulogom user i njihov preostali prostor.
+    // Super admin koji ima i ulogu user također je na popisu (zadatak: "svi korisnici koji imaju ulogu usera"),
+    // a u tablici se prikazuju uloge pa je jasno tko je tko.
     public function users()
     {
-        $users = User::whereHas('roles', fn ($q) => $q->where('name', 'user'))
+        $users = User::whereHas('roles', fn ($q) => $q->where('name', Role::USER))
+            ->with('roles')
             ->withSum('files', 'size') // daje stupac files_sum_size (u KB), null ako nema datoteka
             ->orderBy('username')
             ->paginate(5);
