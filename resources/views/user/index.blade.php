@@ -56,6 +56,7 @@
 
         <form method="POST" action="{{ route('profile.update') }}" class="col-md-6 p-0">
             @csrf
+            @method('PATCH')
 
             <div class="mb-3">
                 <label for="first_name" class="form-label">First name</label>

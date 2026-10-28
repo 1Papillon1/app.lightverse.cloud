@@ -10,31 +10,38 @@
 </head>
 <body class="bg-light">
 
-<nav class="navbar navbar-expand navbar-dark bg-dark mb-4">
+{{-- navbar-expand-md: na mobitelu (ispod 768px) linkovi se skupljaju u hamburger izbornik --}}
+<nav class="navbar navbar-expand-md navbar-dark bg-dark mb-4">
     <div class="container">
-        <a class="navbar-brand" href="/">Cloud</a>
+        <a class="navbar-brand" href="{{ route('dashboard') }}">Cloud</a>
 
         @auth
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#main-nav"
+                    aria-controls="main-nav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="main-nav">
             <ul class="navbar-nav me-auto">
-
-
-                @if(auth()->user()->hasRole('user'))
-                    <li class="nav-item"><a class="nav-link" href="/files">Files</a></li>
-                    <li class="nav-item"><a class="nav-link" href="/profile">Profile</a></li>
+                {{-- active klasa označava trenutnu stranicu u navigaciji --}}
+                @if(auth()->user()->hasRole(\App\Models\Role::USER))
+                    <li class="nav-item"><a class="nav-link {{ request()->routeIs('files.index') ? 'active' : '' }}" href="{{ route('files.index') }}">Files</a></li>
+                    <li class="nav-item"><a class="nav-link {{ request()->routeIs('profile') ? 'active' : '' }}" href="{{ route('profile') }}">Profile</a></li>
                 @endif
-                @if(auth()->user()->hasRole('super_admin'))
-                    <li class="nav-item"><a class="nav-link" href="/admin/files">All Files</a></li>
-                    <li class="nav-item"><a class="nav-link" href="/admin/users">Users</a></li>
+                @if(auth()->user()->hasRole(\App\Models\Role::SUPER_ADMIN))
+                    <li class="nav-item"><a class="nav-link {{ request()->routeIs('admin.files') ? 'active' : '' }}" href="{{ route('admin.files') }}">All Files</a></li>
+                    <li class="nav-item"><a class="nav-link {{ request()->routeIs('admin.users') ? 'active' : '' }}" href="{{ route('admin.users') }}">Users</a></li>
                 @endif
             </ul>
 
-             <span class="navbar-text" style="margin-right:0.5rem">
-                {{auth()->user()->username}}
-            </span>
-            <form method="POST" action="/logout">
-                @csrf
-                <button class="btn btn-outline-light btn-sm">Logout</button>
-            </form>
+            <div class="d-flex align-items-center gap-2 py-2 py-md-0">
+                <span class="navbar-text">{{ auth()->user()->username }}</span>
+                <form method="POST" action="{{ route('logout') }}">
+                    @csrf
+                    <button class="btn btn-outline-light btn-sm">Logout</button>
+                </form>
+            </div>
+            </div>
         @endauth
 
     </div>
