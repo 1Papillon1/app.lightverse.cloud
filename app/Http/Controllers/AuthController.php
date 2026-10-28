@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class AuthController extends Controller
@@ -13,6 +13,11 @@ class AuthController extends Controller
         return view('auth.login');
     }
 
+    public function showRegister()
+    {
+        return view('auth.register');
+    }
+
     public function login(Request $request): RedirectResponse
     {
         $credentials = $request->validate([
@@ -20,12 +25,13 @@ class AuthController extends Controller
             'password' => ['required'],
         ]);
 
-          if (Auth::attempt($credentials)) {
+        // "Remember me" sprema remember_token u bazu i dugotrajni cookie
+        if (Auth::attempt($credentials, $request->boolean('remember'))) {
             $request->session()->regenerate();
- 
-            return redirect()->intended('/');
+
+            return redirect()->intended(route('dashboard'));
         }
- 
+
         return back()->withErrors([
             'username' => 'The provided credentials do not match our records.',
         ])->onlyInput('username');
@@ -38,7 +44,6 @@ class AuthController extends Controller
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 
-        return redirect('/login');
+        return redirect()->route('login');
     }
-
 }
