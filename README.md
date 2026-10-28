@@ -1,66 +1,74 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Zadatak
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+## Opis aplikacije
 
-## About Laravel
+Aplikacija je primjer "cloud" aplikacije gdje je moguće uploadati nove datoteke te downloadati i obrisati postojeće. Za dizajn se poslužite Bootstrapom. Aplikacija ne treba izgledati isto kao ona sa slike, ali treba zadovoljavati sljedeće korisničke zahtjeve:
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+1. **Korisnik** se mora moći ulogirati u aplikaciju pomoću korisničkog imena i lozinke.
+2. Korisnici mogu imati jednu ili više uloga (npr. super administrator, administrator, user).
+   - **a) Prijava kao super administrator**
+     Ukoliko je trenutni korisnik u ulozi super administratora, njegove ovlasti su:
+     - pregled **SVIH** datoteka uploadanih na cloud, downloadanje te brisanje istih (uz podatke u tablici treba imati dodatni stupac **Added By** koji govori koji user je uploadao koji dokument)
+     - pregled **SVIH** korisnika koji imaju ulogu usera i koliko je svakom korisniku ostalo prostora za pohranu
+   - **b) Prijava kao user**
+     Svaki user ima određeni kapacitet koji može uploadati na cloud (npr. 3GB).
+     Ukoliko je trenutni korisnik u ulozi usera, njegove ovlasti su:
+     - pregled datoteka koje je on uploadao na cloud, downloadanje te brisanje istih
+     - ažuriranje vlastitih podataka na profilu (ime, prezime, adresa, …). Također na profilu treba biti prikazan izračun koliko je korisniku preostalo slobodnog mjesta za pohranu (npr. 2/3GB free space left).
+3. Ukoliko je broj uploadanih datoteka veći od 5 potrebno je napraviti paginaciju i prikazivati 5 uploadanih datoteka po stranici.
+4. Ikona uploadanog dokumenta treba se mijenjati s obzirom na ekstenziju dokumenta (pogledati sliku).
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## Očekivana tehnička implementacija aplikacije
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+- Tip projekta: Laravel Web App
+- Ciljani framework: Laravel 11
+- Ciljana baza podataka: MySQL
 
-## Learning Laravel
+Implementacija kompletne aplikacije treba sadržavati:
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+1. Database Migrations
+2. Model Factories
+3. Database Seeding
+4. Blade Templates
+5. Implementacija vlastitog middleware-a koji ograničava pristup stranicama prema ulozi korisnika
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+---
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+## Checklist zahtjeva
 
-## Laravel Sponsors
+### Funkcionalni zahtjevi
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+- [ ] Login pomoću **korisničkog imena** (username, ne email) i lozinke
+- [ ] Logout
+- [ ] Korisnik može imati **više uloga** (many-to-many User ↔ Role)
+- [ ] Uloge: super administrator, administrator, user
+- [ ] Upload datoteka (provjera da ne prelazi preostali kapacitet korisnika)
+- [ ] Download datoteka
+- [ ] Brisanje datoteka (i iz storagea, ne samo iz baze)
 
-### Premium Partners
+**Super administrator**
+- [ ] Popis **svih** datoteka sa stupcem **Added By**
+- [ ] Download i brisanje bilo koje datoteke
+- [ ] Popis svih korisnika s ulogom *user* i njihov **preostali prostor**
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[WebReinvent](https://webreinvent.com/)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Jump24](https://jump24.co.uk)**
-- **[Redberry](https://redberry.international/laravel/)**
-- **[Active Logic](https://activelogic.com)**
-- **[byte5](https://byte5.de)**
-- **[OP.GG](https://op.gg)**
+**User**
+- [ ] Popis samo **vlastitih** datoteka
+- [ ] Download i brisanje samo vlastitih datoteka (zaštita od pristupa tuđim datotekama)
+- [ ] Svaki user ima kapacitet pohrane (npr. 3GB)
+- [ ] Profil: uređivanje vlastitih podataka (ime, prezime, adresa, …)
+- [ ] Profil: prikaz preostalog prostora (npr. „2/3GB free space left")
 
-## Contributing
+**Općenito**
+- [ ] Paginacija – 5 datoteka po stranici
+- [ ] Ikona datoteke ovisno o ekstenziji (pdf, doc/docx, xls/xlsx, slike, zip, txt, …; default ikona za ostalo)
+- [ ] Dizajn pomoću Bootstrapa
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+### Tehnički zahtjevi
 
-## Code of Conduct
-
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
-
-## Security Vulnerabilities
-
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
-
-## License
-
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+- [ ] Laravel 11
+- [ ] MySQL baza
+- [ ] Migracije (users, roles, role_user pivot, files)
+- [ ] Model factories (User, File, …)
+- [ ] Seederi (uloge, super admin, testni useri, eventualno datoteke)
+- [ ] Blade predlošci (layout + view-ovi)
+- [ ] **Vlastiti** middleware za ograničavanje pristupa prema ulozi
